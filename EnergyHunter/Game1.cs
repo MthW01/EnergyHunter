@@ -1,13 +1,17 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-
-namespace EnergyHunter
+﻿namespace EnergyHunter
 {
+    enum Stat
+    {
+        SplashScreen,
+        Game,
+        Pause,
+        Final
+    }
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private Stat stat = Stat.SplashScreen;
 
         public Game1()
         {
@@ -18,34 +22,57 @@ namespace EnergyHunter
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            _graphics.PreferredBackBufferWidth = 1900;
+            _graphics.PreferredBackBufferHeight = 1000;
+            _graphics.IsFullScreen = false;
 
+            _graphics.ApplyChanges();
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
+            SplashScreen.Background = Content.Load<Texture2D>("background");
+            SplashScreen.nameFont = Content.Load<SpriteFont>("splashFont");
+            SplashScreen.mmButtomsFont = Content.Load<SpriteFont>("mmButtom");
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            switch(stat)
+            {
+                case Stat.SplashScreen:
+                    SplashScreen.Update();
+                    if (Keyboard.GetState().IsKeyDown(Keys.Q))
+                        Exit();
+                    if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                        stat = Stat.Game;
+                    break;
+                case Stat.Game:
+                    if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+                        stat = Stat.SplashScreen;
+                    break;
 
-            // TODO: Add your update logic here
+            }
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
+            GraphicsDevice.Clear(Color.Black);
+            _spriteBatch.Begin();
+            switch(stat)
+            {
+                case Stat.SplashScreen:
+                    SplashScreen.Draw(_spriteBatch);
+                    break;
+                case Stat.Game:
+                    break;
+            }
+            SplashScreen.Draw(_spriteBatch);
+            _spriteBatch.End();
             base.Draw(gameTime);
         }
     }
