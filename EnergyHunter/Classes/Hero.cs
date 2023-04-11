@@ -15,9 +15,9 @@
             _maxPos = new(mapSize.X - (tileSize.X / 2) - Origin.X, mapSize.Y - (tileSize.X / 2) - Origin.Y);
         }
 
-        public void Update(GameTime gt)
+        public void Update(GameTime gameTime)
         {
-            Position += InputManager.Direction * (float)gt.ElapsedGameTime.TotalSeconds * speed;
+            Position += InputManager.Direction * (float)gameTime.ElapsedGameTime.TotalSeconds * speed;
             Position = Vector2.Clamp(Position, _minPos, _maxPos);
         }
     }

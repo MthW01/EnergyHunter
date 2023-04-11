@@ -1,6 +1,9 @@
-﻿namespace EnergyHunter
+﻿using System;
+using System.Collections.Generic;
+
+namespace EnergyHunter
 {
-    enum Stat
+    enum State
     {
         SplashScreen,
         Game,
@@ -11,7 +14,9 @@
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private Stat stat = Stat.SplashScreen;
+        private State state = State.SplashScreen;
+        private Button button;
+        private List<Component> _gameComponents;
 
         public Game1()
         {
@@ -19,6 +24,7 @@
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
+
 
         protected override void Initialize()
         {
@@ -35,26 +41,48 @@
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             SplashScreen.Background = Content.Load<Texture2D>("background");
             SplashScreen.nameFont = Content.Load<SpriteFont>("splashFont");
-            SplashScreen.mmButtomsFont = Content.Load<SpriteFont>("mmButtom");
+            //SplashScreen.sgButton = Content.Load<Texture2D>("startgame");
+            var sgButton = new Button(Content.Load<Texture2D>("123"), Content.Load<SpriteFont>("buttonFont"))
+            {
+                Position = new Vector2(100, 350),
+                Text = "Start Game"
+               
+            };
+            var quitButton = new Button(Content.Load<Texture2D>("123"), Content.Load<SpriteFont>("buttonFont"))
+            {
+                Position = new Vector2(100, 470),
+                Text = "Quit"
+            };
+
+            quitButton.Click += QuitButton_Click;
+            _gameComponents = new List<Component>()
+            {
+                sgButton,
+                quitButton,
+            };
+            sgButton.Click += Button_Click;
         }
 
         protected override void Update(GameTime gameTime)
         {
-            switch(stat)
+            switch(state)
             {
-                case Stat.SplashScreen:
+                case State.SplashScreen:
                     SplashScreen.Update();
-                    if (Keyboard.GetState().IsKeyDown(Keys.Q))
+                    foreach (var component in _gameComponents)
+                        component.UpdateButton(gameTime);
+                    if (QuitButton_Click == null)
                         Exit();
                     if (Keyboard.GetState().IsKeyDown(Keys.Enter))
-                        stat = Stat.Game;
+                        state = State.Game;
                     break;
-                case Stat.Game:
+                case State.Game:
                     if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-                        stat = Stat.SplashScreen;
+                        state = State.SplashScreen;
                     break;
 
             }
+            
 
             base.Update(gameTime);
         }
@@ -63,17 +91,28 @@
         {
             GraphicsDevice.Clear(Color.Black);
             _spriteBatch.Begin();
-            switch(stat)
+            switch(state)
             {
-                case Stat.SplashScreen:
+                case State.SplashScreen:
                     SplashScreen.Draw(_spriteBatch);
+                    foreach (var component in _gameComponents)
+                        component.DrawButton(gameTime, _spriteBatch);
                     break;
-                case Stat.Game:
+                case State.Game:
                     break;
             }
-            SplashScreen.Draw(_spriteBatch);
+            
             _spriteBatch.End();
             base.Draw(gameTime);
+        }
+        private void QuitButton_Click(object sender, System.EventArgs e)
+        {
+            Exit();
+        }
+
+        private void Button_Click(object sender, System.EventArgs e)
+        {
+            state = State.Game;
         }
     }
 }
