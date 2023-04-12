@@ -14,9 +14,9 @@ namespace EnergyHunter
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private State state = State.SplashScreen;
-        private Button button;
+        private State state = State.Game;
         private List<Component> _gameComponents;
+        Animation player;
 
         public Game1()
         {
@@ -31,7 +31,7 @@ namespace EnergyHunter
             _graphics.PreferredBackBufferWidth = 1900;
             _graphics.PreferredBackBufferHeight = 1000;
             _graphics.IsFullScreen = false;
-
+            player = new Animation(Content.Load<Texture2D>("run"), new Vector2(300,300), 150, 150);
             _graphics.ApplyChanges();
             base.Initialize();
         }
@@ -45,13 +45,13 @@ namespace EnergyHunter
             var sgButton = new Button(Content.Load<Texture2D>("123"), Content.Load<SpriteFont>("buttonFont"))
             {
                 Position = new Vector2(100, 350),
-                Text = "Start Game"
+                Text = "Начать игру"
                
             };
             var quitButton = new Button(Content.Load<Texture2D>("123"), Content.Load<SpriteFont>("buttonFont"))
             {
                 Position = new Vector2(100, 470),
-                Text = "Quit"
+                Text = "Выйти"
             };
 
             quitButton.Click += QuitButton_Click;
@@ -77,6 +77,7 @@ namespace EnergyHunter
                         state = State.Game;
                     break;
                 case State.Game:
+                    player.Update(gameTime);
                     if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                         state = State.SplashScreen;
                     break;
@@ -99,6 +100,7 @@ namespace EnergyHunter
                         component.DrawButton(gameTime, _spriteBatch);
                     break;
                 case State.Game:
+                    player.Draw(_spriteBatch);
                     break;
             }
             
