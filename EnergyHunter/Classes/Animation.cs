@@ -1,4 +1,6 @@
-﻿namespace EnergyHunter
+﻿using System.Linq;
+
+namespace EnergyHunter
 {
     class Animation
     {
@@ -7,7 +9,21 @@
         Vector2 position;
         Vector2 velocity;
         Vector2 origin;
-
+        #region Animation Numbers
+        // Animation numbers
+        // 0-8 run right
+        // 9-17 run left
+        // 18-20 stay right
+        // 21-23 stay left
+        // 24-27 jump right
+        // 28-31 jump left
+        // 32-35 shoot right
+        // 36-39 shoot left
+        // 40-43 getdmg right
+        // 44-47 getdmg left
+        // 48-53 death right
+        // 54-59 death left
+        #endregion
         int currentFrame;
         int currentFrameForStay;
         int frameHeight;
@@ -39,7 +55,13 @@
                 velocity.X = -3;
             }
             else
+            {
                 velocity = Vector2.Zero;
+                //if (Keyboard.GetState().GetPressedKeys().Last().Equals(Keys.Left))
+                //    StayLeft(gameTime);
+                //if (Keyboard.GetState().GetPressedKeys().Last().Equals(Keys.Right))
+                //    StayRight(gameTime);
+            }
 
 
         }
@@ -49,10 +71,10 @@
             timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds / 2;
             if (timer > interval)
             {
-                currentFrame--;
+                currentFrame++;
                 timer = 0;
-                if (currentFrame < 0)
-                    currentFrame = 5;
+                if (currentFrame > 8)
+                    currentFrame = 0;
             }
         }
         public void AnimateRight(GameTime gameTime)
@@ -67,17 +89,31 @@
             }
         }
 
-        //public void JustStay(GameTime gameTime)
-        //{
-        //    timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds / 2;
-        //    if (timer > interval)
-        //    {
-        //        currentFrameForStay++;
-        //        timer = 0;
-        //        if (currentFrameForStay)
+        public void StayLeft(GameTime gameTime)
+        {
+            timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds / 2;
+            if (timer > interval)
+            {
+                currentFrameForStay++;
+                timer = 0;
+                if (currentFrameForStay > 2)
+                    currentFrameForStay = 0;
 
-        //    }
-        //}
+            }
+        }
+
+        public void StayRight(GameTime gameTime)
+        {
+            timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds / 2;
+            if (timer > interval)
+            {
+                currentFrameForStay++;
+                timer = 0;
+                if (currentFrameForStay > 5 || currentFrameForStay <  3)
+                    currentFrameForStay = 3;
+
+            }
+        }
 
         public void Draw(SpriteBatch spriteBatch)
         {

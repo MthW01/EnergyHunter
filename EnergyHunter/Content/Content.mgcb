@@ -25,6 +25,18 @@
 /processorParam:TextureFormat=Color
 /build:123.png;123
 
+#begin animsprite.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:animsprite.png;animsprite
+
 #begin background.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -44,7 +56,7 @@
 /processorParam:TextureFormat=Compressed
 /build:buttonFont.spritefont;buttonFont
 
-#begin run111.png
+#begin run.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -54,7 +66,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:run111.png;run
+/build:run.png;run
 
 #begin splashFont.spritefont
 /importer:FontDescriptionImporter
@@ -62,16 +74,4 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:splashFont.spritefont;splashFont
-
-#begin war123.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:war123.png;war123
 

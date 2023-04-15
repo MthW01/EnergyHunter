@@ -14,7 +14,7 @@ namespace EnergyHunter
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private State state = State.Game;
+        private State state = State.SplashScreen;
         private List<Component> _gameComponents;
         Animation player;
 
