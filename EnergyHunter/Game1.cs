@@ -14,9 +14,9 @@ namespace EnergyHunter
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private State state = State.SplashScreen;
+        private State state = State.Game;
         private List<Component> _gameComponents;
-        Animation player;
+        Player player;
 
         public Game1()
         {
@@ -31,7 +31,7 @@ namespace EnergyHunter
             _graphics.PreferredBackBufferWidth = 1900;
             _graphics.PreferredBackBufferHeight = 1000;
             _graphics.IsFullScreen = false;
-            player = new Animation(Content.Load<Texture2D>("run"), new Vector2(300,300), 150, 150);
+            player = new Player();
             _graphics.ApplyChanges();
             base.Initialize();
         }
@@ -41,7 +41,6 @@ namespace EnergyHunter
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             SplashScreen.Background = Content.Load<Texture2D>("background");
             SplashScreen.nameFont = Content.Load<SpriteFont>("splashFont");
-            //SplashScreen.sgButton = Content.Load<Texture2D>("startgame");
             var sgButton = new Button(Content.Load<Texture2D>("123"), Content.Load<SpriteFont>("buttonFont"))
             {
                 Position = new Vector2(100, 350),
@@ -61,6 +60,7 @@ namespace EnergyHunter
                 quitButton,
             };
             sgButton.Click += Button_Click;
+            player.Load(Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -77,14 +77,12 @@ namespace EnergyHunter
                         state = State.Game;
                     break;
                 case State.Game:
-                    player.Update(gameTime);
                     if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                         state = State.SplashScreen;
                     break;
 
             }
-            
-
+            player.Update();
             base.Update(gameTime);
         }
 
@@ -100,7 +98,7 @@ namespace EnergyHunter
                         component.DrawButton(gameTime, _spriteBatch);
                     break;
                 case State.Game:
-                    player.Draw(_spriteBatch);
+                    player.Draw(gameTime, _spriteBatch);
                     break;
             }
             

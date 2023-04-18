@@ -25,18 +25,6 @@
 /processorParam:TextureFormat=Color
 /build:123.png;123
 
-#begin animsprite.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:animsprite.png;animsprite
-
 #begin background.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -56,6 +44,18 @@
 /processorParam:TextureFormat=Compressed
 /build:buttonFont.spritefont;buttonFont
 
+#begin jump.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:jump.png;jump
+
 #begin run.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -74,4 +74,16 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:splashFont.spritefont;splashFont
+
+#begin stay.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:stay.png;stay
 
