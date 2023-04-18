@@ -18,6 +18,9 @@ namespace EnergyHunter
         private List<Component> _gameComponents;
         Player player;
 
+        //Bullets
+        List<Bullets> bullets = new List<Bullets>();
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -77,11 +80,15 @@ namespace EnergyHunter
                         state = State.Game;
                     break;
                 case State.Game:
+                    if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                        Shoot();
+                    UpdateBullets();
                     if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                         state = State.SplashScreen;
                     break;
 
             }
+            
             player.Update();
             base.Update(gameTime);
         }
@@ -98,6 +105,8 @@ namespace EnergyHunter
                         component.DrawButton(gameTime, _spriteBatch);
                     break;
                 case State.Game:
+                    foreach (var bullet in bullets)
+                        bullet.Draw(_spriteBatch);
                     player.Draw(gameTime, _spriteBatch);
                     break;
             }
@@ -113,6 +122,34 @@ namespace EnergyHunter
         private void Button_Click(object sender, System.EventArgs e)
         {
             state = State.Game;
+        }
+
+        public void UpdateBullets()
+        {
+            foreach (Bullets bullet in bullets)
+            {
+                bullet.position += bullet.velocity;
+                if (Vector2.Distance(bullet.position, player.position) > 500)
+                    bullet.isVisible = false;
+            }
+            for (int i = 0; i < bullets.Count; i++)
+            {
+                bullets.RemoveAt(i);
+                i--;
+            }
+
+        }
+        public void Shoot()
+        {
+            var newBullet = new Bullets(Content.Load<Texture2D>("123"));
+            if (player.isStayRight)
+                newBullet.velocity = new Vector2(player.position.X, player.position.Y) * 5f + player.velocity;
+            else
+                newBullet.velocity = new Vector2(player.position.X, player.position.Y) * 5f - player.velocity;
+            newBullet.position = player.position + newBullet.velocity * 5;
+            newBullet.isVisible = true;
+            if(bullets.Count < 20)
+                bullets.Add(newBullet);
         }
     }
 }
