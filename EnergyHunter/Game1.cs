@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace EnergyHunter
 {
@@ -16,10 +19,8 @@ namespace EnergyHunter
         private SpriteBatch _spriteBatch;
         private State state = State.Game;
         private List<Component> _gameComponents;
-        Player player;
-
-        //Bullets
-        List<Bullets> bullets = new List<Bullets>();
+        private Player player;
+        Map map;
 
         public Game1()
         {
@@ -31,16 +32,35 @@ namespace EnergyHunter
 
         protected override void Initialize()
         {
-            _graphics.PreferredBackBufferWidth = 1900;
-            _graphics.PreferredBackBufferHeight = 1000;
-            _graphics.IsFullScreen = false;
+            map = new Map();
+            _graphics.PreferredBackBufferWidth = 1920;
+            _graphics.PreferredBackBufferHeight = 1080;
+            _graphics.IsFullScreen = true;
             player = new Player();
             _graphics.ApplyChanges();
             base.Initialize();
+            
         }
 
         protected override void LoadContent()
         {
+            Tiles.Content = Content;
+            #region Map Generation
+            map.Generate(new int[,] {
+                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, },
+                {0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0, },
+                {0,0,0,0,0,0,0,0,0,0,0,1,1,1,2,2,0,0,0,0, },
+                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0, },
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0, },
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, },
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, },
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, },
+                {1,1,1,2,1,1,2,2,2,2,2,2,2,2,2,2,0,0,0,0, },
+            }, 100);
+
+            #endregion
+            player.Load(Content);
+
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             SplashScreen.Background = Content.Load<Texture2D>("background");
             SplashScreen.nameFont = Content.Load<SpriteFont>("splashFont");
@@ -63,13 +83,13 @@ namespace EnergyHunter
                 quitButton,
             };
             sgButton.Click += Button_Click;
-            player.Load(Content);
         }
 
         protected override void Update(GameTime gameTime)
         {
             switch(state)
             {
+                #region SplashScreen
                 case State.SplashScreen:
                     SplashScreen.Update();
                     foreach (var component in _gameComponents)
@@ -79,17 +99,18 @@ namespace EnergyHunter
                     if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                         state = State.Game;
                     break;
+                #endregion
+                #region Game
                 case State.Game:
-                    if (Keyboard.GetState().IsKeyDown(Keys.Space))
-                        Shoot();
-                    UpdateBullets();
+                    player.Update();
+                    foreach (ColissionTiles tiles in map.ColissionTiles)
+                        player.Collision(tiles.Rectangle, map.Width, map.Height);
                     if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                         state = State.SplashScreen;
                     break;
-
+                #endregion
             }
-            
-            player.Update();
+
             base.Update(gameTime);
         }
 
@@ -105,8 +126,8 @@ namespace EnergyHunter
                         component.DrawButton(gameTime, _spriteBatch);
                     break;
                 case State.Game:
-                    foreach (var bullet in bullets)
-                        bullet.Draw(_spriteBatch);
+                    _spriteBatch.Draw(Content.Load<Texture2D>("backgroundSky"), Vector2.Zero, Color.White);
+                    map.Draw(_spriteBatch);
                     player.Draw(gameTime, _spriteBatch);
                     break;
             }
@@ -114,42 +135,14 @@ namespace EnergyHunter
             _spriteBatch.End();
             base.Draw(gameTime);
         }
-        private void QuitButton_Click(object sender, System.EventArgs e)
+        private void QuitButton_Click(object sender, EventArgs e)
         {
             Exit();
         }
 
-        private void Button_Click(object sender, System.EventArgs e)
+        private void Button_Click(object sender, EventArgs e)
         {
             state = State.Game;
-        }
-
-        public void UpdateBullets()
-        {
-            foreach (Bullets bullet in bullets)
-            {
-                bullet.position += bullet.velocity;
-                if (Vector2.Distance(bullet.position, player.position) > 500)
-                    bullet.isVisible = false;
-            }
-            for (int i = 0; i < bullets.Count; i++)
-            {
-                bullets.RemoveAt(i);
-                i--;
-            }
-
-        }
-        public void Shoot()
-        {
-            var newBullet = new Bullets(Content.Load<Texture2D>("123"));
-            if (player.isStayRight)
-                newBullet.velocity = new Vector2(player.position.X, player.position.Y) * 5f + player.velocity;
-            else
-                newBullet.velocity = new Vector2(player.position.X, player.position.Y) * 5f - player.velocity;
-            newBullet.position = player.position + newBullet.velocity * 5;
-            newBullet.isVisible = true;
-            if(bullets.Count < 20)
-                bullets.Add(newBullet);
         }
     }
 }

@@ -5,6 +5,7 @@ namespace EnergyHunter
     static class SplashScreen
     {
         public static Texture2D Background { get; set; }
+        public static Texture2D bgSky { get; set; }
         public static SpriteFont nameFont { get; set; }
         public static Texture2D sgButton { get; set; }
 
@@ -15,8 +16,6 @@ namespace EnergyHunter
         {
             spriteBatch.Draw(Background, Vector2.Zero, color);
             spriteBatch.DrawString(nameFont, "Energy  Hunter", new Vector2(100, 100), color);
-            //spriteBatch.Draw(sgButton, new Vector2(100, 400), color);
-
         }
 
         public static void Update()
