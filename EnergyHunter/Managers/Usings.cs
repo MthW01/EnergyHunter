@@ -1,5 +1,5 @@
 ﻿global using Microsoft.Xna.Framework;
 global using Microsoft.Xna.Framework.Graphics;
 global using Microsoft.Xna.Framework.Input;
-global using Microsoft.Xna.Framework.Content;
+global using MonoGame.SpriteEngine;
 global using System;
