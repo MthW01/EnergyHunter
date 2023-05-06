@@ -6,13 +6,14 @@ namespace EnergyHunter
     {
         public enum GameState
         {
-            Game, Pause, Menu
+            Game, Pause, Menu, Finish
         }
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        GameState gameState = GameState.Menu;
+        public GameState gameState = GameState.Menu;
         private List<Component> _gameComponents;
+        private List<Component> _gameComponents2;
 
         public Game1()
         {
@@ -34,25 +35,46 @@ namespace EnergyHunter
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             SplashScreen.Background = Content.Load<Texture2D>("background");
             SplashScreen.nameFont = Content.Load<SpriteFont>("splashFont");
+            FinishScreen.Background = Content.Load<Texture2D>("background");
             var sgButton = new Button(Content.Load<Texture2D>("buttonBg"), Content.Load<SpriteFont>("buttonFont"))
             {
                 Position = new Vector2(100, 350),
                 Text = "Начать игру"
 
             };
+
             var quitButton = new Button(Content.Load<Texture2D>("buttonBg"), Content.Load<SpriteFont>("buttonFont"))
             {
                 Position = new Vector2(100, 470),
                 Text = "Выйти"
             };
 
+            var mmButton = new Button(Content.Load<Texture2D>("buttonBg"), Content.Load<SpriteFont>("buttonFont"))
+            {
+                Position = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2 - 50),
+                Text = "Главное Меню"
+
+            };
+            var finquitButton = new Button(Content.Load<Texture2D>("buttonBg"), Content.Load<SpriteFont>("buttonFont"))
+            {
+                Position = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2 + 50),
+                Text = "Выйти"
+            };
+
+            finquitButton.Click += QuitButton_Click;
             quitButton.Click += QuitButton_Click;
             _gameComponents = new List<Component>()
             {
                 sgButton,
                 quitButton,
             };
+            _gameComponents2 = new List<Component>()
+            {
+                finquitButton,
+                mmButton,
+            };
             sgButton.Click += Button_Click;
+            mmButton.Click += Button_ClickMM;
         }
 
         protected override void LoadContent()
@@ -63,7 +85,7 @@ namespace EnergyHunter
 
         protected override void Update(GameTime gameTime)
         {
-            
+
             switch (gameState)
             {
                 case GameState.Game:
@@ -85,9 +107,18 @@ namespace EnergyHunter
                             gameState = GameState.Game;
                         break;
                     }
+                case GameState.Finish:
+                    {
+                        FinishScreen.Update();
+                        foreach (var component in _gameComponents2)
+                            component.UpdateButton(gameTime);
+                        if (QuitButton_Click == null)
+                            Exit();
+                        break;
+                    }
             }
 
-            
+
             base.Update(gameTime);
         }
 
@@ -111,6 +142,13 @@ namespace EnergyHunter
                             component.DrawButton(gameTime, _spriteBatch);
                         break;
                     }
+                case GameState.Finish:
+                    {
+                        FinishScreen.Draw(_spriteBatch);
+                        foreach (var component in _gameComponents2)
+                            component.DrawButton(gameTime, _spriteBatch);
+                        break;
+                    }
             }
             _spriteBatch.End();
             base.Draw(gameTime);
@@ -125,6 +163,11 @@ namespace EnergyHunter
         private void Button_Click(object sender, System.EventArgs e)
         {
             gameState = GameState.Game;
+        }
+
+        private void Button_ClickMM(object sender, System.EventArgs e)
+        {
+            gameState = GameState.Menu;
         }
         #endregion
     }

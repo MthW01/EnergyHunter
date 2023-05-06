@@ -1,4 +1,4 @@
-﻿namespace EnergyHunter.Map.Map
+﻿namespace EnergyHunter
 {
     public class Background : BackgroundSprite
     {

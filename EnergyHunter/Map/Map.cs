@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace EnergyHunter.Map
+namespace EnergyHunter
 {
     class Map
     {

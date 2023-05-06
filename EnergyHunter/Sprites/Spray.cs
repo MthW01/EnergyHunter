@@ -1,4 +1,4 @@
-﻿namespace EnergyHunter.Sprites
+﻿namespace EnergyHunter
 {
     public class Spray : PlayerSprite
     {

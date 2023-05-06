@@ -1,6 +1,5 @@
-﻿using EnergyHunter.Managers.SpriteEngine;
-
-namespace EnergyHunter.Sprites
+﻿
+namespace EnergyHunter
 {
     public enum State
     {
